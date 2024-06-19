@@ -11,14 +11,19 @@ type User struct {
     ID        string 	`json:"id"`
     Name      string    `json:"name"`
     Email     string    `json:"email"`
+	Weekdays  string    `json:"weekdays"`
+	Cities    string    `json:"cities"`
     Password  string    `json:"-"`
     CreatedAt time.Time `json:"created_at"`
     UpdatedAt time.Time `json:"updated_at"`
+	
 }
 type UserPayload struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Weekdays string `json:"weekdays"`
+	Cities   string `json:"cities"`
 }
 type UsersList struct {
 	Users []User `json:"users"`
@@ -27,7 +32,7 @@ type UsersList struct {
 func (u *User) GetAllUsers() ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
-	query := `SELECT id, name, email, created_at, updated_at FROM users`
+	query := `SELECT id, name, email, weekdays, cities, created_at, updated_at FROM users`
 	rows, err := db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -39,6 +44,8 @@ func (u *User) GetAllUsers() ([]*User, error) {
 			&user.ID,
 			&user.Name,
 			&user.Email,
+			&user.Weekdays,
+			&user.Cities,
 			&user.CreatedAt,
 			&user.UpdatedAt,
 		)
@@ -53,12 +60,14 @@ func (u *User) GetAllUsers() ([]*User, error) {
 func (u *User) GetUserByID(id string) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
-	query := `SELECT id, name, email, created_at, updated_at FROM users WHERE id = $1`
+	query := `SELECT id, name, email, weekdays, cities, created_at, updated_at FROM users WHERE id = $1`
 	row := db.QueryRowContext(ctx, query, id)
 	err := row.Scan(
 		&u.ID,
 		&u.Name,
 		&u.Email,
+		&u.Weekdays,
+		&u.Cities,
 		&u.CreatedAt,
 		&u.UpdatedAt,
 	)
@@ -77,8 +86,8 @@ func (u *User) CreateUser(user User) (*User, error) {
         return nil, err
     }
 
-    query := `INSERT INTO users (name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, created_at, updated_at`
-    err = db.QueryRowContext(ctx, query, user.Name, user.Email, hashedPassword, time.Now(), time.Now()).Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &user.UpdatedAt)
+    query := `INSERT INTO users (name, email, weekdays, cities, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, created_at, updated_at`
+    err = db.QueryRowContext(ctx, query, user.Name, user.Email, user.Weekdays, user.Cities, hashedPassword, time.Now(), time.Now()).Scan(&user.ID, &user.Name, &user.Email, &user.Weekdays, &user.Cities, &user.CreatedAt, &user.UpdatedAt)
     if err != nil {
         return nil, err
     }
@@ -90,7 +99,7 @@ func (u *User) UpdateUser(id string, body User) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
 	defer cancel()
 	query := `UPDATE users SET name = $1, email = $2, updated_at = $3 WHERE id = $4`
-	_, err := db.ExecContext(ctx, query, body.Name, body.Email, time.Now(), id)
+	_, err := db.ExecContext(ctx, query, body.Name, body.Email, body.Weekdays, body.Cities, time.Now(), id)
 	if err != nil {
 		return  nil, err
 	}
