@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 import {
@@ -20,7 +22,6 @@ import { GridIcon, QuestionIcon } from '../ui/buttons';
 import {
 	Sheet,
 	SheetContent,
-	SheetDescription,
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,

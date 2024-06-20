@@ -36,30 +36,63 @@ type UserAlbumsList struct {
 	UserAlbums []UserAlbum `json:"user_albums"`
 }
 
-func (a *Album) GetAllAlbums() ([]*Album, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
-	defer cancel()
-	query := `SELECT id, title, description, created_at, updated_at FROM albums`
-	rows, err := db.QueryContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	var albums []*Album
-	for rows.Next() {
-		var album Album
-		err := rows.Scan(
-			&album.ID,
-			&album.Title,
-			&album.Description,
-			&album.CreatedAt,
-			&album.UpdatedAt,
-		)
-		if err != nil {
-			return nil, err
-		}
-		albums = append(albums, &album)
-	}
-	return albums, nil
+type AlbumWithUsers struct {
+    ID          string    `json:"id"`
+    Title       string    `json:"title"`
+    Description string    `json:"description"`
+    CreatedAt   time.Time `json:"created_at"`
+    UpdatedAt   time.Time `json:"updated_at"`
+    UserIDs     []string  `json:"user_ids"` 
+}
+
+func (a *Album) GetAllAlbums() ([]*AlbumWithUsers, error) {
+    ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
+    defer cancel()
+    queryAlbums := `SELECT id, title, description, created_at, updated_at FROM albums`
+    rows, err := db.QueryContext(ctx, queryAlbums)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    albums := make([]*AlbumWithUsers, 0) 
+    for rows.Next() {
+        var album AlbumWithUsers
+        err := rows.Scan(
+            &album.ID,
+            &album.Title,
+            &album.Description,
+            &album.CreatedAt,
+            &album.UpdatedAt,
+        )
+        if err != nil {
+            return nil, err
+        }
+
+        queryUserIDs := `SELECT user_id FROM user_albums WHERE album_id = $1`
+        userRows, err := db.QueryContext(ctx, queryUserIDs, album.ID)
+        if err != nil {
+            return nil, err
+        }
+        defer userRows.Close()
+
+        for userRows.Next() {
+            var userID string
+            err := userRows.Scan(&userID)
+            if err != nil {
+                return nil, err
+            }
+            album.UserIDs = append(album.UserIDs, userID)
+        }
+
+        albums = append(albums, &album) 
+    }
+
+    if err = rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return albums, nil
 }
 
 func (a *Album) GetAlbumByID(id string) (*Album, error) {
