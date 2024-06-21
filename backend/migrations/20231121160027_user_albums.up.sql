@@ -1,7 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS user_albums (
-  "user_id" UUID NOT NULL,
+  "user_id" VARCHAR(255) NOT NULL,
   "album_id" UUID NOT NULL,
   "added_at" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   PRIMARY KEY (user_id, album_id),
