@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/navbar';
 import Stats from '@/components/layout/stats';
 import Footer from '@/components/layout/footer';
 import { ThemeProvider } from '@/components/theme-provider';
+import Providers from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,13 +24,15 @@ export default function RootLayout({
 		<html lang="pt-br" suppressHydrationWarning>
 			<body className={inter.className}>
 				<ThemeProvider attribute="class" defaultTheme="light">
-					<Header />
-					<Navbar />
-					<Stats />
-					<main className="min-h-[calc(100vh-21.45rem)]">
-						{children}
-					</main>
-					<Footer />
+					<Providers>
+						<Header />
+						<Navbar />
+						<Stats />
+						<main className="min-h-[calc(100vh-21.45rem)]">
+							{children}
+						</main>
+						<Footer />
+					</Providers>
 				</ThemeProvider>
 			</body>
 		</html>

@@ -1,11 +1,12 @@
 import React from 'react';
-
-const page = () => {
+import UserTableProvider from '@/components/data-providers/user-table';
+import MaxWidthWrapper from '@/components/ui/max-width-wrapper';
+const Page = () => {
 	return (
-		<main className="min-h-full">
-			<div></div>
-		</main>
+		<MaxWidthWrapper>
+			<UserTableProvider />
+		</MaxWidthWrapper>
 	);
 };
 
-export default page;
+export default Page;
