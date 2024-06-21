@@ -1,7 +1,7 @@
 import React from 'react';
-import TipoQuadra from '../ui/tipo-quadra';
-import Nivel from '../ui/nivel';
-import Vitorias from '../ui/vitorias';
+import TipoQuadra from '../../assets/tipo-quadra';
+import Nivel from '@/assets/nivel';
+import Vitorias from '../../assets/vitorias';
 
 const Stats = () => {
 	return (

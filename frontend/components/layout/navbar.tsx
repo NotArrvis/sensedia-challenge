@@ -9,7 +9,7 @@ import {
 	BreadcrumbList,
 	BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import Sensedia from '../ui/sensedia';
+import Sensedia from '@/assets/sensedia';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -18,7 +18,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { GridIcon, QuestionIcon } from '../ui/buttons';
+import { GridIcon, QuestionIcon } from '@/assets/buttons';
 import {
 	Sheet,
 	SheetContent,
@@ -27,8 +27,20 @@ import {
 	SheetTrigger,
 } from '@/components/ui/sheet';
 import { HamburgerMenuIcon } from '@radix-ui/react-icons';
-
+import { usePathname } from 'next/navigation';
 const Navbar = () => {
+	const pathname = usePathname();
+	const getBreadcrumbItem = () => {
+		if (pathname === '/') {
+			return 'Tabela de Usuários';
+		} else if (pathname === '/user/new') {
+			return 'Registro';
+		} else if (pathname.startsWith('/user/')) {
+			const userId = pathname.split('/').pop();
+			return `Usuário ${userId}`;
+		}
+		return null;
+	};
 	return (
 		<nav className="w-full flex justify-between">
 			<div className="flex  items-center justify-center md:justify-start p-5  gap-2 max-sm:max-w-sm">
@@ -45,11 +57,18 @@ const Navbar = () => {
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbLink href="/components">
-									Registro
-								</BreadcrumbLink>
-							</BreadcrumbItem>
+							{getBreadcrumbItem() && (
+								<>
+									<BreadcrumbItem>
+										<BreadcrumbLink
+											href={pathname}
+											className="text-[#6A6A6A] truncate max-w-[30ch]"
+										>
+											{getBreadcrumbItem()}
+										</BreadcrumbLink>
+									</BreadcrumbItem>
+								</>
+							)}
 						</BreadcrumbList>
 					</Breadcrumb>
 				</div>
