@@ -4,12 +4,12 @@
 -   [x] Adicionar campo de busca na tabela (Filtros: Username e nome)
 -   [x] Adicionar botão de deleção de usuario (On hover)
 -   [x] Adiconar loading states da tabela
--   [ ] Criação do perfil do usuario ([rotas dinâmicas], validação)
--   [ ] Criação de rota de cadastro de usuario
--   [ ] Criação do forms (validação e servers actions dele, forms shadcn, server-side)
+-   [x] Criação do perfil do usuario ([rotas dinâmicas], validação)
+-   [x] Criação de rota de cadastro de usuario
+-   [x] Criação do forms (validação e servers actions dele, forms shadcn, server-side)
 -   [x] Correções gerais de layout
--   [ ] correção de breakpoints (sm & lg)
--   [ ] Correção da população da tabela (backend)
+-   [x] correção de breakpoints (sm & lg)
+-   [x] Correção da população da tabela (backend)
 
 ---
 
@@ -65,5 +65,3 @@ make run
 ```
 
 ---
-
-## Step-by-step
