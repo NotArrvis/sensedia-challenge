@@ -3,7 +3,8 @@ package services
 import (
 	"context"
 	"time"
-
+    "math/big"
+	"crypto/rand"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -77,17 +78,36 @@ func (u *User) GetUserByID(id string) (*User, error) {
 	return u, nil
 }
 
+func generateRandomPassword(length int) (string, error) {
+    const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    var result string
+    for i := 0; i < length; i++ {
+        num, err := rand.Int(rand.Reader, big.NewInt(int64(len(letters))))
+        if err != nil {
+            return "", err
+        }
+        result += string(letters[num.Int64()])
+    }
+    return result, nil
+}
+
 func (u *User) CreateUser(user User) (*User, error) {
     ctx, cancel := context.WithTimeout(context.Background(), dbTimeout)
     defer cancel()
+
+    randomPassword, err := generateRandomPassword(12)
+    if err != nil {
+        return nil, err
+    }
+    user.Password = randomPassword
 
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
     if err != nil {
         return nil, err
     }
 
-    query := `INSERT INTO users (name, email, weekdays, cities, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email, created_at, updated_at`
-    err = db.QueryRowContext(ctx, query, user.Name, user.Email, user.Weekdays, user.Cities, hashedPassword, time.Now(), time.Now()).Scan(&user.ID, &user.Name, &user.Email, &user.Weekdays, &user.Cities, &user.CreatedAt, &user.UpdatedAt)
+    query := `INSERT INTO users (id, name, email, weekdays, cities, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, name, email, weekdays, cities, created_at, updated_at`
+err = db.QueryRowContext(ctx, query, user.ID, user.Name, user.Email, user.Weekdays, user.Cities, hashedPassword, time.Now(), time.Now()).Scan(&user.ID, &user.Name, &user.Email, &user.Weekdays, &user.Cities, &user.CreatedAt, &user.UpdatedAt)
     if err != nil {
         return nil, err
     }
