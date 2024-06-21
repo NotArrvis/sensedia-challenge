@@ -39,6 +39,10 @@ pip install load_dotenv
 pip install psycopg2
 ```
 
+### Backend
+
+On the folder backend you should follow these steps:
+
 After installing the dependencies, you need to build the database container. Make sure you have your .env file with the correct values, as exemplified in the .env.sample.
 
 ```bash
@@ -63,5 +67,31 @@ After that, you need to build and run the application.
 make build
 make run
 ```
+
+### Frontend
+
+On the folder frontend you should follow these steps:
+
+First, you need to install the dependencies.
+
+```bash
+pnpm install
+```
+
+Then, you need to build the application.
+
+    ```bash
+    pnpm build
+    ```
+
+Finally, you need to run the application.
+
+    ```bash
+    pnpm start
+    ```
+
+A few obervations are:
+
+-   I'm assuming you're running the backend on the port 8080, if you're not, you need to change the port on the calls. I considered putting it in a .env but i feared it could lead to some mistake by forgetting it.
 
 ---
