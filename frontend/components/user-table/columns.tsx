@@ -26,7 +26,7 @@ export const columns: ColumnDef<MergedData>[] = [
 					className="hover:cursor-pointer"
 				>
 					<p className=" !text-[#3D3D3D] font-semibold  !truncate max-w-[15ch] max-sm:max-w-[10ch]">
-						{user.name}
+						{user.id}
 					</p>
 				</Link>
 			);
@@ -84,11 +84,8 @@ export const columns: ColumnDef<MergedData>[] = [
 		id: 'actions',
 		cell: ({ row }) => {
 			const user = row.original;
-			return (
-				<p className={row.getIsSelected() ? 'block' : 'hidden'}>
-					<DeleteDialog user={user} />
-				</p>
-			);
+			const isSelected = row.getIsSelected();
+			return <DeleteDialog user={user} isSelected={isSelected} />;
 		},
 	},
 ];

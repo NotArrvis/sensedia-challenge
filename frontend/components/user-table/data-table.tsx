@@ -97,9 +97,9 @@ export function DataTable<TData, TValue>({
 		return pages;
 	}
 	return (
-		<div className="flex flex-col min-w-full items-center justify-center ">
+		<div className="flex flex-col min-w-full items-center justify-center pt-8">
 			<div className="flex items-center justify-between min-w-full relative">
-				<div className="flex items-center py-6 max-sm:px-4 max-sm:max-w-[20rem] sm:w-[44rem] md:w-[60rem] xl:w-[72rem] 2xl:w-[73rem]   ">
+				<div className="flex items-center py-6 max-sm:px-4 max-sm:max-w-[20rem] sm:w-[36rem] md:w-[44rem] lg:md:w-[64rem] xl:w-[72rem] 2xl:w-[73rem]   ">
 					<Input
 						placeholder="Procurar"
 						value={
@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
 					<MagnifyingGlassIcon className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none w-5 h-5 text-[#919191]" />
 				</div>
 			</div>
-			<div className="rounded-md border-t-[1px] border-b-[1px] border-[#C4C4C4] min-w-full max-sm:px-4 max-sm:max-w-[20rem] sm:w-[44rem] md:w-[60rem] xl:w-[72rem] 2xl:w-[73rem] sm:h-[12rem] md:h-[14rem] xl:h-[15rem] 2xl:h-[15rem]">
+			<div className="rounded-md border-t-[1px] border-b-[1px] border-[#C4C4C4] min-w-full max-sm:px-4 max-sm:max-w-[20rem] sm:w-[36rem] md:w-[44rem] xl:w-[72rem] 2xl:w-[73rem] sm:h-[15.5rem] md:h-[15.5rem] lg:w-[64rem] xl:h-[15.5rem] 2xl:h-[15.5rem]">
 				<Table className="min-w-full table-auto">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -180,14 +180,14 @@ export function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-			<div className="flex max-sm:flex-col max-sm:justify-center w-full items-center justify-between gap-2 flex-wrap  max-sm:px-4 max-sm:max-w-[20rem]  sm:w-[24rem] md:w-[40rem] xl:w-[50rem] 2xl:w-[68rem]  sm:my-8">
+			<div className="flex max-sm:flex-col max-sm:justify-center w-full items-center justify-between gap-2 flex-wrap  max-sm:px-4 max-sm:max-w-[20rem]  sm:w-[36rem] md:w-[44rem] lg:w-[64rem] xl:w-[72rem] 2xl:w-[73rem] sm:my-20 md:my-8">
 				<div className=" uppercase font-medium text-xs max-sm:self-start max-sm:my-2">
 					Total <span className=" text-sm">{data.length}</span>
 				</div>
 				<div className=" max-sm:w-64 max-sm:justify-center sm:w-72 md:w-96 flex items-center gap-4">
 					<Button
 						variant={'outline'}
-						className="rounded-[1.125rem] uppercase bg-transparent hover:bg-[#9E9E9E] border border-[#9E9E9E] text-xs font-medium max-sm:hidden"
+						className="rounded-[1.125rem] uppercase bg-transparent hover:bg-[#9E9E9E] border border-[#9E9E9E] text-xs font-medium max-md:hidden"
 						onClick={() => table.previousPage()}
 						disabled={!table.getCanPreviousPage()}
 					>
@@ -208,7 +208,7 @@ export function DataTable<TData, TValue>({
 					)}
 
 					<div className="flex">
-						{pageIndex === pageCount - 1 && (
+						{pageIndex === pageCount - 1 && pageCount > 2 && (
 							<Button
 								variant={'outline'}
 								className={`rounded-[1.125rem] uppercase bg-transparent hover:bg-[#9E9E9E] border border-[#9E9E9E] text-xs font-medium rounded-r-none ${
@@ -231,10 +231,11 @@ export function DataTable<TData, TValue>({
 										? 'bg-[#9E9E9E] text-white'
 										: ''
 								} ${
-									pageIndex - 1 === pageCount - 2
+									pageIndex - 1 === pageCount - 2 &&
+									pageCount > 2
 										? 'rounded-l-none'
 										: ''
-								}`}
+								} `}
 								onClick={() =>
 									table.setPageIndex(pageIndex - 1)
 								}
@@ -255,7 +256,7 @@ export function DataTable<TData, TValue>({
 								pageIndex === pageIndex
 									? 'bg-[#9E9E9E] text-white'
 									: ''
-							}`}
+							} ${pageCount <= 1 ? 'rounded-[1.125rem]' : ''}`}
 							onClick={() => table.setPageIndex(pageIndex)}
 						>
 							{pageIndex + 1}
@@ -270,6 +271,8 @@ export function DataTable<TData, TValue>({
 										: ''
 								} ${
 									pageIndex + 1 === 1 ? 'rounded-r-none' : ''
+								} ${
+									pageCount <= 2 ? 'rounded-r-[1.125rem]' : ''
 								}`}
 								onClick={() =>
 									table.setPageIndex(pageIndex + 1)
@@ -279,7 +282,7 @@ export function DataTable<TData, TValue>({
 							</Button>
 						)}
 
-						{pageIndex === 0 && (
+						{pageIndex === 0 && pageCount > 2 && (
 							<Button
 								variant={'outline'}
 								className={`rounded-[1.125rem] uppercase bg-transparent hover:bg-[#9E9E9E] border border-[#9E9E9E] text-xs font-medium rounded-l-none ${
@@ -319,7 +322,7 @@ export function DataTable<TData, TValue>({
 						Próximo
 					</Button>
 				</div>
-				<div className=" flex items-center gap-4 max-sm:self-start max-sm:my-2">
+				<div className=" flex items-center gap-4 max-sm:self-start max-md:my-2">
 					<div className=" uppercase font-medium text-xs text-left w-14">
 						Ir para a página
 					</div>

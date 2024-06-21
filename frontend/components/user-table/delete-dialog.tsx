@@ -19,7 +19,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 
-function DeleteDialog({ user }: { user: MergedData }) {
+function DeleteDialog({
+	user,
+	isSelected,
+}: {
+	user: MergedData;
+	isSelected: boolean;
+}) {
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
 	const deleter = async () => {
@@ -44,7 +50,13 @@ function DeleteDialog({ user }: { user: MergedData }) {
 	return (
 		<Dialog modal open={open} onOpenChange={setOpen}>
 			<DialogTrigger>
-				<Trash2Icon className="w-5 h-5 text-[#8556AA] hover:cursor-pointer" />
+				<Trash2Icon
+					className={
+						isSelected
+							? 'w-5 h-5 text-[#8556AA] hover:cursor-pointer'
+							: ' w-5 h-5 text-transparent '
+					}
+				/>
 			</DialogTrigger>
 			<DialogContent className="w-full max-w-sm">
 				<DialogHeader>
